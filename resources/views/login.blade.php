@@ -87,7 +87,7 @@
 
               <div class="d-grid">
                 <button class="btn btn-primary btn-login text-uppercase fw-bold" id="btnEntrar" type="submit">Entrar</button>
-                <button class="btn btn-secondary btn-login text-uppercase fw-bold" type="button">Cadastrar</button>
+                <a href="/cadastrar" class="btn fw-bold">Novo Cadastro</a>
               </div>
 
             </form>

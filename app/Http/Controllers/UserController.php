@@ -23,14 +23,8 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
 
-            var_dump(Auth::check());
-            Session::put('user', Auth::user());
+            Session::put('userAuth', Auth::user());
             Auth::login(Auth::user());
-
-            var_dump(Auth::user());
-
-            //dd('logou');
-            //$request->session()->regenerate();
 
             return redirect()->intended('home');
         }

@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function home(){
 
-        if(Session('user')){
+        if(Session('userAuth')){
             return view('home');
         }
 
