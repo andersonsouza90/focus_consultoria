@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
 use App\Http\Controllers\ValidacaoArquivoController;
+use App\Http\Controllers\GeraXMLController;
 
 class UploadController extends Controller
 {
@@ -82,7 +83,9 @@ class UploadController extends Controller
             //var_dump(count($rows[0]));
 
             $validacaoController = new ValidacaoArquivoController;
-            $return = $validacaoController->validacao($rows);
+
+            //valida colunas
+            $return = $validacaoController->validaColunas($rows);
 
             if($return['countErro'] > 0){
                 return back()->withErrors([
@@ -92,8 +95,26 @@ class UploadController extends Controller
                  ]);
              }
 
-             var_dump('agora validar os dados');
-            dd($return); die;
+            //valida dados
+            $returnValidaDados = $validacaoController->validarDados($rows);
+
+            //dd($returnValidaDados);
+
+            if($returnValidaDados['countErro'] > 0){
+                return back()->withErrors([
+                    'totalErros' => "Corrigir os erros no Documento! ",
+                    'msg' => $returnValidaDados['msg']
+
+                 ]);
+             }
+
+             $geraXMLController = new GeraXMLController;
+
+             $retornoGeraXML = $geraXMLController->parseXML($rows);
+
+
+             var_dump('agora gerar o xml');
+            dd($retornoGeraXML); die;
         }
 
 

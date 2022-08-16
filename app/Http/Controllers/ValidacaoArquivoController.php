@@ -7,21 +7,19 @@ use Illuminate\Support\Arr;
 
 class ValidacaoArquivoController extends Controller
 {
-    public function validacao($assoc_array){
+    public function validaColunas($assoc_array){
+
+        //dd($assoc_array[0]);
 
 		$msg = [];
 		$countErro = 0;
 		$erro = array();
 
-		if(count($assoc_array) > 1){
+		if(count($assoc_array[0]) > 1){
 
-			foreach ($assoc_array as $key => $value) {
+			//foreach ($assoc_array[0] as $key => $value) {
+                $value = $assoc_array[0];
 				$renomer = "Renomear conforme texto";
-
-                // echo '<pre>';
-				// print_r($value);
-                // dd(in_array("NumeroRPS", $value));
-                // die;
 
 				if(!in_array("NumeroRPS", $value)){
 					//$msg .= "Não existe a coluna {NumeroRPS} - ". $renomer ." 'NumeroRPS';</li>";
@@ -70,11 +68,7 @@ class ValidacaoArquivoController extends Controller
 				//	$countErro++;
 				//}
 
-	            $erro['msg']=$msg;
-	            $erro['countErro']=$countErro;
-
-	            return $erro;
-			}
+			//}
 
 	    }
 
@@ -187,4 +181,90 @@ class ValidacaoArquivoController extends Controller
 	  }
 	  return $r;
 	}
+
+    public function validarDados($assoc_array){
+
+        $l = 0;
+        $m = [];
+        $erro = [];
+
+        foreach ($assoc_array as $key => $dadoValidar) {
+
+            if($assoc_array[$key][array_search('PrestadorCNPJ', $assoc_array[0])] != "PrestadorCNPJ"){
+
+                $PrestadorCNPJ = str_pad($dadoValidar[array_search('PrestadorCNPJ', $assoc_array[0])] , 14 , '0' , STR_PAD_LEFT);
+                if(!$this->validaCNPJ($PrestadorCNPJ)){
+                    array_push($m, "CNPJ inválido ".$PrestadorCNPJ." {PrestadorCNPJ} linha ". ($key+2) );
+                    $l++;
+
+                    // var_dump(array_search('PrestadorCNPJ', $assoc_array[0]));
+                    // dd($dadoValidar);
+                    // dd($dadoValidar[array_search('PrestadorCNPJ', $assoc_array[0])]);
+                }
+
+                $InscricaoMunicipal = $dadoValidar[array_search('InscricaoMunicipal', $assoc_array[0])];
+
+                if(!$this->dados($dadoValidar[array_search('InscricaoMunicipal', $assoc_array[0])])){
+                    array_push($m, "Dados inválido ".$InscricaoMunicipal." {InscricaoMunicipal} linha ".($key+2) );
+                    $l++;
+                }
+
+                $CpfCnpjTomador = str_pad($dadoValidar[array_search('CpfCnpjTomador', $assoc_array[0])] , 11 , '0' , STR_PAD_LEFT);
+                if(!$this->validaCPF($CpfCnpjTomador)){
+                    array_push($m, "CPF inválido ".$CpfCnpjTomador." {CpfCnpjTomador} linha ".($key+2) );
+                    $l++;
+                }
+
+                $DataEmissao = $dadoValidar[array_search('DataEmissao', $assoc_array[0])];
+                //$DataEmissao = $this->converte_data($DataEmissao);
+
+                if(!$this->valida_data($DataEmissao)){
+                    array_push($m, "Data inválida ".$DataEmissao." {DataEmissao} linha ".($key+2)." Padrão (Ano)-(Mẽs)-(Dia)");
+                    $l++;
+                }
+
+                $ValorIss = $dadoValidar[array_search('ValorIss', $assoc_array[0])];
+                //$ValorIss = $this->dados($ValorIss);
+                if(!$this->dados($ValorIss)){
+                    array_push($m, "Dados inválido ".$ValorIss." {ValorIss} linha ".($key+2)." Padrão 0.00");
+                    $l++;
+                }
+
+                $Aliquota = $dadoValidar[array_search('Aliquota', $assoc_array[0])];
+                //$Aliquota = $this->dados($Aliquota);
+                if(!$this->dados($Aliquota)){
+                    array_push($m, "Dados inválido ".$Aliquota." {Aliquota} linha ".($key+2)." Padrão 0.00");
+                    $l++;
+                }
+
+
+                $Competencia = $dadoValidar[array_search('Competencia', $assoc_array[0])];
+                //$Competencia = $this->converte_data($Competencia);
+
+                if(!$this->valida_data($Competencia)){
+                    array_push($m, "Data inválida ".$Competencia." {Competencia} linha ".($key+1)." Padrão (Ano)-(Mẽs)-(Dia)");
+                    $l++;
+                }
+
+            }
+
+        }
+
+        $erro['msg'] = $m;
+        $erro['countErro'] = $l;
+
+        return $erro;
+
+        // $qtdRPS = count($assoc_array);
+        // if($return['countErro']==0){
+        //     $xml = parseXml($assoc_array);
+        //     echo '<h4><a href="' . $xml  . '" target="_blank">Documento XML gerado, Total de RPS '.$qtdRPS.'</a></h4>';
+
+        //     echo '<br/>';
+
+        //     echo '<h4><a href="http://nfse.vitoria.es.gov.br/" target="_blank">Validador de arquivos RPS (no formato XML)</a></h4>';
+
+        // }
+
+    }
 }
