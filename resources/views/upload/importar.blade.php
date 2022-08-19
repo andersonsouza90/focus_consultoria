@@ -32,6 +32,14 @@
                     display: inline;
                     margin-left: 10%;
                 }
+
+                html, body {
+                    height: 90%;
+                    }
+
+                    .full-height {
+                    height: 100%;
+                    }
         </style>
 
 	</head>
@@ -61,57 +69,43 @@
         </div>
     </nav>
 
+    <div class="jumbotron full-height">
+        <div class="container text-center">
+          <h3>XML</h3>
+        </div>
+        <div class="container">
+            <div class="row">
 
-
-	<div class="container">
-		<div class="row">
-			<div id="form-login">
                 @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <?= die; ?>
+                @endif
+
+
+
+                <div class="alert alert-success" role="alert">
+                    Upload efetuado com sucesso!
+                </div>
+
+                <div class="alert alert-light" role="alert" style="font-size: 16px;">
+                    <a href="downloadArquivoImportado/{{$retornoGeraXML['nome_arquivo']}}" target="_blank">Clique aqui para acessar o arquivo importado.</a> <br>
+                    <a href="downloadXML/{{$retornoGeraXML['xml_file_name']}}" target="_blank">
+                        Documento XML gerado com total de {{$retornoGeraXML['QuantidadeRps']}} RPS</a> <br>
+                    <a href="http://nfse.vitoria.es.gov.br/" target="_blank">Validador de arquivos RPS (no formato XML)</a>
+
+                </div>
             </div>
-        @endif
 
-				<form class="form-horizontal well" action="{{route('route.importar')}}"
-                method="post" name="upload_excel" enctype="multipart/form-data">
-                @csrf
-					<fieldset>
-						<legend>Upload CSV/Excel</legend>
+        </div>
+    </div>
 
-                        <div class="form-floating mb-3">
-                            <input type="file" name="arquivo" id="arquivo" class="input-large">
-                            <!-- <label>CSV/Excel Arquivo:</label> -->
-                        </div>
 
-						<!---div--- class="control-group">
-							<div class="control-label">
-								<label>CSV/Excel Arquivo:</label>
-							</div>
-							<div class="controls">
-								<input type="file" name="file" id="file" class="input-large" required="">
-							</div>
-						</!---div--->
-
-                        <br>
-
-                        <div class="d-grid">
-                            <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit" id="submit" name="Import">
-                                Enviar
-                            </button>
-                            <h4 id="linkArquivo">
-                                <a href="downloadExemplo" target="_blank">Arquivo de Exemplo</a></h4>
-                        </div>
-
-					</fieldset>
-				</form>
-
-			</div>
-		</div>
-	</div>
 
 
 	</body>

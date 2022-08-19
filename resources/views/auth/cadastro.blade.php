@@ -79,13 +79,30 @@
             <form method="post" action="{{route('route.cadastrarPost')}}">
               @csrf
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" name="nome" placeholder="nome" >
-                <label for="nome">Nome</label>
+                <input type="text" class="form-control" name="razaoSocial" placeholder="Razão Social" >
+                <label for="razaoSocial">Razão Social</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="fantasia" placeholder="Fantasia" >
+                <label for="fantasia">Fantasia</label>
               </div>
               <div class="form-floating mb-3">
                 <input type="text" class="form-control" name="cnpj" placeholder="CNPJ">
                 <label for="cnpj">CNPJ</label>
               </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="enderecoCompleto" placeholder="Endereço completo" >
+                <label for="enderecoCompleto">Endereço completo</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="telefone" placeholder="Telefone" >
+                <label for="telefone">Telefone</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="email" class="form-control" name="email" placeholder="Email" required>
+                <label for="email">Email</label>
+              </div>
+
               <div class="form-floating mb-3">
                 <input type="password" class="form-control" name="password" placeholder="Senha">
                 <label for="password">Senha</label>
@@ -93,7 +110,7 @@
 
               <div class="d-grid">
                 <button class="btn btn-primary btn-login text-uppercase fw-bold" id="btnEntrar" type="submit">Cadastrar</button>
-                <a href="/" class="btn fw-bold">Cancelar</a>
+                <a href="{{route('route.login')}}" class="btn fw-bold">Cancelar</a>
               </div>
 
             </form>

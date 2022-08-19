@@ -25,6 +25,14 @@
             background: #1a202c;
         }
 
+    html, body {
+    height: 90%;
+    }
+
+    .full-height {
+    height: 100%;
+    }
+
   </style>
 </head>
 <body>
@@ -44,20 +52,20 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
         <li><a href="#">Meus Dados</a></li>
-        <li><a href="/upload">Upload</a></li>
+        <li><a href="{{route('route.upload')}}">Upload</a></li>
         <li><a href="#">Contato</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Sair</a></li>
+        <li><a href="{{route('route.logout')}}"><span class="glyphicon glyphicon-log-out"></span> Sair</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
-<div class="jumbotron">
+<div class="jumbotron full-height">
   <div class="container text-center">
     <h1>Bem-vindo</h1>
-    <p><?=session('userAuth')['nome'] ?></p>
+    <p><?=session('userAuth')['razao_social'] ?></p>
   </div>
 </div>
 

@@ -24,9 +24,8 @@ use App\Http\Controllers\UploadController;
 // });
 
 Route::get('/',[LoginController::class, 'login'])->name('login');
-Route::get('/login',[LoginController::class, 'login']);
-Route::get('/cadastrar',[CadastrarController::class, 'cadastrar'])->name('route.cadastrarView');
-Route::post('/cadastrar-post',[CadastrarController::class, 'cadastrarPost'])->name('route.cadastrarPost');
+Route::get('/login',[LoginController::class, 'login'])->name('route.login');
+
 Route::post('/autenticacao',[UserController::class, 'autenticacao'])->name('route.autenticacao');
 Route::get('/logout',[LoginController::class, 'logout'])->name('route.logout');
 Route::get('/home',[HomeController::class, 'home'])->name('route.home');
@@ -34,6 +33,15 @@ Route::get('/home',[HomeController::class, 'home'])->name('route.home');
 
 Route::get('/upload',[UploadController::class, 'upload'])->name('route.upload');
 Route::get('/downloadExemplo',[UploadController::class, 'donwloadExemplo']);
+
+Route::get('/downloadXML/{xml}',[UploadController::class, 'donwloadXmlGerado']);
+Route::get('/downloadArquivoImportado/{arquivo}',[UploadController::class, 'donwloadArquivoImportado']);
+
 //upload arquivo
 Route::post('/importar', [UploadController::class, 'importar'])->name('route.importar');
+
+
+//cadastrar
+Route::get('/cadastrar',[CadastrarController::class, 'cadastrar'])->name('route.cadastrarView');
+Route::post('/cadastrar-post',[CadastrarController::class, 'cadastrarPost'])->name('route.cadastrarPost');
 

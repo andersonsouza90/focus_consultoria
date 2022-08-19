@@ -68,8 +68,16 @@
                 </div>
             @endif
 
-            <?php
+            @if (session('cadastro'))
+                <div class="alert alert-{{session('cadastro')['tipo_alerta']}}">
+                    <ul>
+                        <li>{{ session('cadastro')['mensagem'] }}</li>
+                    </ul>
+                </div>
+            @endif
 
+            <?php
+                //dd($cadastroRealizado);
 
             ?>
 
@@ -86,8 +94,10 @@
               </div>
 
               <div class="d-grid">
+
                 <button class="btn btn-primary btn-login text-uppercase fw-bold" id="btnEntrar" type="submit">Entrar</button>
-                <a href="/cadastrar" class="btn fw-bold">Novo Cadastro</a>
+                <a href="{{route('route.cadastrarView')}}" class="btn fw-bold">Novo Cadastro</a>
+
               </div>
 
             </form>

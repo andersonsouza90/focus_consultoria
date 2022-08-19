@@ -43,6 +43,53 @@ class UploadController extends Controller
 
     }
 
+    public function donwloadArquivoImportado($arquivo){
+
+        if(Session('userAuth')){
+
+            $diretorio = "uploads_arquivos/diretorio-".session('userAuth')['id_usuario']."/arquivos/".$arquivo;
+
+            if(Storage::disk('local')->exists($diretorio)){
+
+                return response()->download(storage_path().'/app/'.$diretorio);
+
+            }
+            return redirect('/404');
+
+        }
+
+        return redirect("/");
+
+    }
+
+    public function donwloadXmlGerado($xml){
+
+        if(Session('userAuth')){
+
+            $diretorio = "uploads_arquivos/diretorio-".session('userAuth')['id_usuario']."/xml/".$xml;
+
+            //dd($diretorio);
+
+            if(Storage::disk('local')->exists($diretorio)){
+
+                $path = Storage::disk('local')->path($diretorio);
+                $content = file_get_contents($path);
+
+                return response($content)->withHeaders([
+                    'Content-type' => mime_content_type($path)
+                ]);
+
+                //return response()->download(storage_path().'/app/'.$diretorio);
+
+            }
+            return redirect('/404');
+
+        }
+
+        return redirect("/");
+
+    }
+
 
     public function importar(Request $req){
 
@@ -64,13 +111,24 @@ class UploadController extends Controller
             ini_set('memory_limit','256M');
 
             $extensao = $req->arquivo->getClientOriginalExtension();
-            $diretorio = "uploads_arquivos/diretorio-".session('userAuth')['id_usuario'];
+            $diretorio = "uploads_arquivos/diretorio-".session('userAuth')['id_usuario']."/arquivos";
 
             //$path_upload = $req->arquivo->storeAs($diretorio, 'planilha-'.session('userAuth')['id_usuario'].".{$extensao}");
 
-            $path_upload = $req->arquivo->store($diretorio);
+            try{
+                $path_upload = $req->arquivo->store($diretorio);
+            }catch(\Exception $e){
+                return back()->withErrors([
+                    'erro' => 'Erro ao armazenar o arquivo.',
+                 ]);
+
+            }
+
+            $nome_arquivo = basename($path_upload);
 
             $rows = Excel::toArray(new UsersImport, $path_upload)[0];
+
+            //dd(Excel::toArray(new UsersImport, $path_upload));
 
             if(count($rows[0]) <= 1){
 
@@ -85,7 +143,15 @@ class UploadController extends Controller
             $validacaoController = new ValidacaoArquivoController;
 
             //valida colunas
-            $return = $validacaoController->validaColunas($rows);
+            try{
+                $return = $validacaoController->validaColunas($rows);
+            }catch(\Exception $e){
+                return back()->withErrors([
+                    'erro' => 'Erro ao validar as colunas do arquivo.',
+                 ]);
+
+            }
+
 
             if($return['countErro'] > 0){
                 return back()->withErrors([
@@ -96,7 +162,15 @@ class UploadController extends Controller
              }
 
             //valida dados
-            $returnValidaDados = $validacaoController->validarDados($rows);
+            try{
+                $returnValidaDados = $validacaoController->validarDados($rows);
+            }catch(\Exception $e){
+                return back()->withErrors([
+                    'erro' => 'Erro ao validar os dados do arquivo.',
+                 ]);
+
+            }
+
 
             //dd($returnValidaDados);
 
@@ -110,11 +184,20 @@ class UploadController extends Controller
 
              $geraXMLController = new GeraXMLController;
 
-             $retornoGeraXML = $geraXMLController->parseXML($rows);
+            try{
+                $retornoGeraXML = $geraXMLController->parseXML($rows);
+            }catch(\Exception $e){
+                return back()->withErrors([
+                    'erro' => 'Erro ao criar arquivo XML.',
+                 ]);
 
+            }
 
-             var_dump('agora gerar o xml');
-            dd($retornoGeraXML); die;
+             $retornoGeraXML['nome_arquivo'] = $nome_arquivo;
+
+            //dd($retornoGeraXML);
+
+            return view("upload/importar")->with('retornoGeraXML', $retornoGeraXML);
         }
 
 

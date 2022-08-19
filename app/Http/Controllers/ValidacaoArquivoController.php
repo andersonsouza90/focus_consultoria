@@ -186,7 +186,7 @@ class ValidacaoArquivoController extends Controller
 
         $l = 0;
         $m = [];
-        $erro = [];
+        $retorno = [];
 
         foreach ($assoc_array as $key => $dadoValidar) {
 
@@ -250,21 +250,10 @@ class ValidacaoArquivoController extends Controller
 
         }
 
-        $erro['msg'] = $m;
-        $erro['countErro'] = $l;
+        $retorno['msg'] = $m;
+        $retorno['countErro'] = $l;
 
-        return $erro;
-
-        // $qtdRPS = count($assoc_array);
-        // if($return['countErro']==0){
-        //     $xml = parseXml($assoc_array);
-        //     echo '<h4><a href="' . $xml  . '" target="_blank">Documento XML gerado, Total de RPS '.$qtdRPS.'</a></h4>';
-
-        //     echo '<br/>';
-
-        //     echo '<h4><a href="http://nfse.vitoria.es.gov.br/" target="_blank">Validador de arquivos RPS (no formato XML)</a></h4>';
-
-        // }
+        return $retorno;
 
     }
 }
